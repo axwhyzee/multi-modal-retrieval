@@ -1,0 +1,94 @@
+services:
+  storage_service_api:
+    build:
+      context: ./multi-modal-retrieval-storage-service
+      dockerfile: Dockerfile
+    command: ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+    environment:
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_USERNAME: ${REDIS_USERNAME}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      AWS_S3_BUCKET_ACCESS_KEY: ${AWS_S3_BUCKET_ACCESS_KEY}
+      AWS_S3_BUCKET_SECRET_ACCESS_KEY: ${AWS_S3_BUCKET_SECRET_ACCESS_KEY}
+      AWS_S3_BUCKET_NAME: ${AWS_S3_BUCKET_NAME}
+      AWS_S3_BUCKET_REGION: ${AWS_S3_BUCKET_REGION}
+    networks:
+      - local-network
+
+  preprocessor_service_event_consumer:
+    build:
+      context: ./multi-modal-retrieval-preprocessor-service
+      dockerfile: Dockerfile
+    depends_on:
+      - storage_service_api
+    command: ["python3", "app.py"]
+    environment:
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_USERNAME: ${REDIS_USERNAME}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      STORAGE_SERVICE_API_URL: ${STORAGE_SERVICE_API_URL}
+    networks:
+      - local-network
+
+  embedding_service_api:
+    build:
+      context: ./multi-modal-retrieval-embedding-service
+      dockerfile: Dockerfile
+    image: embedding_service
+    command: ["gunicorn", "--bind", "0.0.0.0:5000", "entrypoints.app:app"]
+    environment:
+      PYTHONPATH: .
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_USERNAME: ${REDIS_USERNAME}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      STORAGE_SERVICE_API_URL: ${STORAGE_SERVICE_API_URL}
+      PINECONE_API_KEY: ${PINECONE_API_KEY}
+    networks:
+      - local-network
+
+  embedding_service_event_consumer:
+    image: embedding_service
+    command: ["python", "entrypoints/event_consumer.py"]
+    environment:
+      PYTHONPATH: .
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_USERNAME: ${REDIS_USERNAME}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      STORAGE_SERVICE_API_URL: ${STORAGE_SERVICE_API_URL}
+      PINECONE_API_KEY: ${PINECONE_API_KEY}
+    networks:
+      - local-network
+
+  gateway_service_api:
+    build:
+      context: ./multi-modal-retrieval-gateway-service
+      dockerfile: Dockerfile
+    command: ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+    ports:
+      - "5001:5000"
+    environment:
+      STORAGE_SERVICE_API_URL: ${STORAGE_SERVICE_API_URL}
+      EMBEDDING_SERVICE_API_URL: ${EMBEDDING_SERVICE_API_URL}
+    networks:
+      - local-network
+
+  frontend:
+    build:
+      context: ./multi-modal-retrieval-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    command: ["npm", "start"]
+    environment:
+      REACT_APP_API_URL: ${REACT_APP_API_URL}
+      REACT_APP_USER: ${REACT_APP_USER}
+    networks:
+      - local-network
+
+networks:
+  local-network:
+    driver: bridge
