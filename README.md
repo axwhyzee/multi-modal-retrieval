@@ -1,6 +1,16 @@
 # Multi-Modal Retrieval System
 This project is a demonstration of a Multi-Modal Retrieval System, where documents of various modalities like image, text, video, image+text, can be retrieved using text in natural language. It can be used in corporate intranet document lookup, cloud storage search, or even enhancing Google search by going beyond simple text matching.
 
+| **Component** | **Description** | **GitHub Repo** |
+| --------- | ----------- | ----------- |
+| Event Core | Common code for:<ul><li>Domain models</li><li>Event schemas</li><li>API clients for:</li><ul><li>Storage Service</li><li>Embedding Service</li><li>Mapping Service</li></ul></li></ul> | https://github.com/axwhyzee/multi-modal-retrieval-event-core |
+| Gateway Service | <ul><li>API gateway</li><li>Coordinate calls to various services to aggregate a response</li></ul> | https://github.com/axwhyzee/multi-modal-retrieval-gateway-service
+| Storage Service | Remote object repository using AWS S3 buckets | https://github.com/axwhyzee/multi-modal-retrieval-storage-service
+| Embedding Service | <ul><li>On ChunkStored events, index the chunk using Pinecone</li><li>Given a query, fetch most relevant objects in 2-stage retrieval</li> | https://github.com/axwhyzee/multi-modal-retrieval-embedding-service
+| Preprocessor Service | On DocStored events, chunk document, carry out text and image preprocessing on chunks, and generate thumbnails | https://github.com/axwhyzee/multi-modal-retrieval-preprocessor-service
+| Meta Service | Holds mapping of objects to their meta data | N/A (using Redis server)
+
+
 This repo orchestrates the system on a single machine with containerized services. To run a distributed version, each service (each git repo) can run on its own box.
 
 ## Demo
