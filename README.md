@@ -1,4 +1,11 @@
 # Multi-Modal Retrieval System
+This project is a demonstration of a Multi-Modal Retrieval System, where documents of various modalities like image, text, video, image+text, can be retrieved using text in natural language. It can be used in corporate intranet document lookup, cloud storage search, or even enhancing Google search by going beyond simple text matching.
+
+## Demo
+
+https://github.com/user-attachments/assets/fe070d59-6a9b-47b2-8d31-b95382432fb1
+
+
 This repo orchestrates the system on a single machine with containerized services. To run a distributed version, each service (each git repo) can run on its own box.
 
 ## Architecture
