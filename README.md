@@ -12,6 +12,7 @@ This project is a demonstration of a Multi-Modal Retrieval System, where documen
 
 
 This repo orchestrates the system on a single machine with containerized services. To run a distributed version, each service (each git repo) can run on its own box.
+<hr/>
 
 ## Demo
 In the following demo, the object repo consists of:
@@ -21,13 +22,15 @@ In the following demo, the object repo consists of:
 - Random sampling of 150 images from [Flickr30k](https://www.kaggle.com/datasets/hsankesara/flickr-image-dataset)
 
 https://github.com/user-attachments/assets/fe070d59-6a9b-47b2-8d31-b95382432fb1
-
+<hr/>
 
 ## Architecture
+The hybrid architecture can be divided into the write and read paths, which are event-driven and request-response based respectively.
+
 ![FYP System Design v2 (1)](https://github.com/user-attachments/assets/e07a9ed7-b197-4422-941d-64fc88ab9628)
 ![FYP System Design v2 (3)](https://github.com/user-attachments/assets/b6ebe350-7174-4351-b6d2-cd0c93dfb320)
 
-The system is a hybrid of event-driven and request-response architecture. The write path is designed to be event-driven because processing bottlenecks like chunking and embedding can be called asynchronously; all steps within the write path are idempotent; and eventual consistency is sufficient. The read path however, is required to respond back to the user ASAP, and hence uses a traditional synchronous request-response design.
+The write path is designed to be event-driven because processing bottlenecks like chunking and embedding can be called asynchronously; all steps within the write path are idempotent; and eventual consistency is sufficient. The read path however, is required to respond back to the user ASAP, and hence uses a traditional synchronous request-response design.
 
 To support retrieval of documents of various modalalities using text, the `Embedding Service` is designed with dual-modal `text-<MODAL>` embedder and reranker models.
 
@@ -40,7 +43,7 @@ For the write path, when there is a request to index an object, the `Embedder Fa
 For the read path, when there is a request to query using a text, the `Embedding Service` iterates through all supported modals, and for each modal, the `Embedder Factory` creates the corresponding embedder to embed the text, then fetch the `top_k` most relevant objects from the namespace associated with the user and modal. Next, the `Reranker factory` creates the reranker corresponding to the modal and reranks the candidates, yielding only the `top_n` ranked objects.
 
 *Note: `top_k` = `top_n` * MULTIPLIER, where MULTIPLIER is an int > 1*
-
+<hr/>
 
 ## Setup
 1. Create a `.env` file with the following env vars:
