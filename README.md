@@ -75,3 +75,7 @@ To scale up a particular service like `embedding_service_event_consumer`, change
 ```
 docker-compose up -d --scale embedding_service_event_consumer=3
 ```
+<hr/>
+
+## Expansion
+In this project, a single `openai/clip-vit-base-patch32` model suffices to index image, text, video and image + text documents. However, this system is designed such that it is not required to have documents of all modalities live in the same embedding space. This means that new modalities can be introduced, as long as there exists a dual-modal `text-<NEW MODAL> ` model. For instance, the audio modality can be introduced as long as there exists a suitable `text-audio` embedding model and reranker.
