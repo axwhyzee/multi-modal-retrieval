@@ -2,6 +2,11 @@
 This project is a demonstration of a Multi-Modal Retrieval System, where documents of various modalities like image, text, video, image+text, can be retrieved using text in natural language. It can be used in corporate intranet document lookup, cloud storage search, or even enhancing Google search by going beyond simple text matching.
 
 ## Demo
+In the following demo, the object repo consists of:
+- Random sampling of 30 videos from the [tiktok-trending-december-2020 dataset](https://www.kaggle.com/datasets/erikvdven/tiktok-trending-december-2020)
+- Random sampling of 30 PDFs from [dataset-of-pdf-files](https://www.kaggle.com/datasets/manisha717/dataset-of-pdf-files)
+- Random sampling of 60 text files from [wikipedia-small-3000-embedded](https://huggingface.co/datasets/not-lain/wikipedia-small-3000-embedded)
+- Random sampling of 150 images from [Flickr30k](https://www.kaggle.com/datasets/hsankesara/flickr-image-dataset)
 
 https://github.com/user-attachments/assets/fe070d59-6a9b-47b2-8d31-b95382432fb1
 
