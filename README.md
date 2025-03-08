@@ -43,3 +43,9 @@ STORAGE_SERVICE_API_URL=http://storage_service_api-1:5000/      # use generated 
 3. Run `source run.sh` to clone the services + build and/or start the docker containers
 4. Insert dummy data by running `python insert.py`
 5. Go to `http://localhost:3000` to access the web-based GUI
+
+## Workers
+To scale up a particular service like `embedding_service_event_consumer`, change the docker command in `run.sh` as shown
+```
+docker-compose up -d --scale embedding_service_event_consumer=3
+```
