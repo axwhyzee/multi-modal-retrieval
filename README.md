@@ -1,6 +1,12 @@
 # Multi-Modal Retrieval System
+This repo orchestrates the system on a single machine with containerized services. To run a distributed version, each service (each git repo) can run on its own box.
 
-This repo orchestrates the system on a single machine with containerized services. To run a distributed version, each service (each git repo) is meant to run on its own box.
+## Architecture
+![FYP System Design v2 (1)](https://github.com/user-attachments/assets/e07a9ed7-b197-4422-941d-64fc88ab9628)
+![FYP System Design v2 (2)](https://github.com/user-attachments/assets/4222c918-e64c-4c05-a03e-06897a834f1c)
+
+The system is a hybrid of event-driven and request-response architecture. The write path is designed to be event-driven because processing bottlenecks like chunking and embedding can be called asynchronously, all steps within the write path are idempotent, and eventual consistency is sufficient. The read path however, is required to respond back to the user ASAP, and hence uses a traditional synchronous request-response design.
+
 
 ## Setup
 1. Create a `.env` file with the following env vars:
