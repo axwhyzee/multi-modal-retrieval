@@ -25,7 +25,7 @@ https://github.com/user-attachments/assets/fe070d59-6a9b-47b2-8d31-b95382432fb1
 
 ## Architecture
 ![FYP System Design v2 (1)](https://github.com/user-attachments/assets/e07a9ed7-b197-4422-941d-64fc88ab9628)
-![FYP System Design v2 (2)](https://github.com/user-attachments/assets/4222c918-e64c-4c05-a03e-06897a834f1c)
+![FYP System Design v2 (3)](https://github.com/user-attachments/assets/b6ebe350-7174-4351-b6d2-cd0c93dfb320)
 
 The system is a hybrid of event-driven and request-response architecture. The write path is designed to be event-driven because processing bottlenecks like chunking and embedding can be called asynchronously; all steps within the write path are idempotent; and eventual consistency is sufficient. The read path however, is required to respond back to the user ASAP, and hence uses a traditional synchronous request-response design.
 
