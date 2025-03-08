@@ -9,6 +9,7 @@ This project is a demonstration of a Multi-Modal Retrieval System, where documen
 | Embedding Service | <ul><li>On ChunkStored events, index the chunk using Pinecone</li><li>Given a query, fetch most relevant objects in 2-stage retrieval</li> | https://github.com/axwhyzee/multi-modal-retrieval-embedding-service
 | Preprocessor Service | On DocStored events, chunk document, carry out text and image preprocessing on chunks, and generate thumbnails | https://github.com/axwhyzee/multi-modal-retrieval-preprocessor-service
 | Meta Service | Holds mapping of objects to their meta data | N/A (using Redis server)
+| Frontend | GUI | https://github.com/axwhyzee/multi-modal-retrieval-frontend
 
 
 This repo orchestrates the system on a single machine with containerized services. To run a distributed version, each service (each git repo) can run on its own box.
