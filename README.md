@@ -1,6 +1,8 @@
 # Multi-Modal Retrieval System
 This project is a demonstration of a Multi-Modal Retrieval System, where documents of various modalities like image, text, video, image+text, can be retrieved using text in natural language. It can be used in corporate intranet document lookup, cloud storage search, or even enhancing Google search by going beyond simple text matching.
 
+This repo orchestrates the system on a single machine with containerized services. To run a distributed version, each service (each git repo) can run on its own box.
+
 ## Demo
 In the following demo, the object repo consists of:
 - Random sampling of 30 videos from the [tiktok-trending-december-2020 dataset](https://www.kaggle.com/datasets/erikvdven/tiktok-trending-december-2020)
@@ -10,8 +12,6 @@ In the following demo, the object repo consists of:
 
 https://github.com/user-attachments/assets/fe070d59-6a9b-47b2-8d31-b95382432fb1
 
-
-This repo orchestrates the system on a single machine with containerized services. To run a distributed version, each service (each git repo) can run on its own box.
 
 ## Architecture
 ![FYP System Design v2 (1)](https://github.com/user-attachments/assets/e07a9ed7-b197-4422-941d-64fc88ab9628)
