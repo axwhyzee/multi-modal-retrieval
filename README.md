@@ -84,7 +84,7 @@ User sends a text query to the Gateway Service, which forwards the request to th
 
 #### 2.2.2.2 Read Path: Retrieval
 
-![FYP System Design v2 (12)](https://github.com/user-attachments/assets/1010cefa-89b7-47c3-9668-0b9ad01cc584)
+![FYP System Design v2 (15)](https://github.com/user-attachments/assets/a32bf0e8-f80c-4ca6-a4d0-6fe7ac0305ed)
 
 For each element type, Embedding Service embeds the text query using the corresponding embedding model. The text embedding is used to query in the namespace corresponding to the element type and user, fetching top-k elements most similar to the text query. The top-k elements are reranked by the element-specific rerankers, and only the top-n ranked elements are returned as response.
 
