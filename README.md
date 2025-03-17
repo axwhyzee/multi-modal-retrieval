@@ -15,9 +15,9 @@ This project is a demonstration of a Multi-Modal Retrieval System, where documen
 This repo orchestrates the system on a single machine with containerized services. To run a distributed version, each service (each git repo) can run on its own box.
 <hr/>
 
-## Demo
+# 1. Demo
 
-### Sony WH-1000XM4 Help Guide
+## 1.1 Sony WH-1000XM4 Help Guide
 Use case: Customer support<br/>
 Dataset:
 - PDFs scraped from [Sony WH-1000XM4 Help Guide](https://helpguide.sony.net/mdr/wh1000xm4/v1/en/index.html)
@@ -27,7 +27,7 @@ https://github.com/user-attachments/assets/d47c62df-6495-4882-8019-eff8320f2cfd
 
 <br/>
 
-### Pinecone Python Client Codebase
+## 1.2 Pinecone Python Client Codebase
 Use case: Internal technical documentation search<br/>
 Dataset:
 - [Pinecone GitHub Code Base](https://github.com/pinecone-io/pinecone-python-client)
@@ -36,25 +36,65 @@ https://github.com/user-attachments/assets/d1782548-c8f8-4c92-8ab5-a7cba4692d87
 
 <hr/>
 
-## Architecture
+# 2. System
+## 2.1 System Overview
+![FYP System Design v2 (7)](https://github.com/user-attachments/assets/501e85f3-c355-4ad7-8ab5-2f6a19a3fe25)
+
+## 2.2 Detailed Architecture
 The hybrid architecture can be divided into the write and read paths, which are event-driven and request-response based respectively.
+<br/><br/>
 
-![FYP System Design v2 (1)](https://github.com/user-attachments/assets/e07a9ed7-b197-4422-941d-64fc88ab9628)
-![FYP System Design v2 (3)](https://github.com/user-attachments/assets/b6ebe350-7174-4351-b6d2-cd0c93dfb320)
+### 2.2.1 Write Path
 
-The write path is designed to be event-driven because processing bottlenecks like chunking and embedding can be called asynchronously; all steps within the write path are idempotent; and eventual consistency is sufficient. The read path however, is required to respond back to the user ASAP, and hence uses a traditional synchronous request-response design.
+![FYP System Design v2 (11)](https://github.com/user-attachments/assets/54752d42-7838-4444-a6c7-6790932351ec)
 
-To support retrieval of documents of various modalalities using text, the `Embedding Service` is designed with dual-modal `text-<MODAL>` embedder and reranker models.
+The write path is designed to be event-driven because processing bottlenecks like chunking and embedding can be called asynchronously; all steps within the write path are idempotent; and eventual consistency is sufficient.
+<br/><br/>
 
-![FYP System Design v2 (5)](https://github.com/user-attachments/assets/7e8f49ba-d170-407d-a2c5-60a03bcbc01e)
+#### 2.2.1.1 Write Path: Document Upload
+When a document is uploaded to the Gateway Service (API gateway), the Gateway Service stores the document into the Storage Service, which emits a DocStored event.
+<br/><br/>
 
-For the write path, when there is a request to index an object, the `Embedder Factory` creates the corresponding embedder to embed the object, then insert the embedding into the corresponding namespace in Pinecone.
+#### 2.2.1.2 Write Path: Pre-processing
 
-![FYP System Design v2 (6)](https://github.com/user-attachments/assets/f5805b56-acf1-44b8-afff-d3b90ca67056)
+![FYP System Design v2 (8)](https://github.com/user-attachments/assets/aee8bb7c-8251-41ff-891d-9e80d1c660da)
 
-For the read path, when there is a request to query using a text, the `Embedding Service` iterates through all supported modals, and for each modal, the `Embedder Factory` creates the corresponding embedder to embed the text, then fetch the `top_k` most relevant objects from the namespace associated with the user and modal. Next, the `Reranker factory` creates the reranker corresponding to the modal and reranks the candidates, yielding only the `top_n` ranked objects.
+DocStored events are received by the Preprocessor Service, which extracts elements like images, texts, plots and code blocks are from the document. Assets like document thumbnails and element thumbnails are also generated. All these objects are stored in the Storage Service, and meta data is inserted into the Meta Service where applicable. When element objects are inserted into the Storage Service, ElementStored events are emitted.
+<br/><br/>
+
+#### 2.2.1.3 Write Path: Indexing
+
+![FYP System Design v2 (10)](https://github.com/user-attachments/assets/f518a7d1-06cb-4f26-aaba-23ab390e7117)
+
+ElementStored events are received by the Embedding Service, which embeds the elements using the corresponding embedding models. The embeddings are indexed in the corresponding {ELEMENT_TYPE}/{USER} namespace in vector database Pinecone which allows multi-tenancy.
+<br/><br/>
+
+### 2.2.2 Read Path
+
+![FYP System Design v2 (13)](https://github.com/user-attachments/assets/a6e17bb3-617f-4f82-bda0-db8837c10283)
+
+The read path is synchronous because it must respond back to the user ASAP. Hence, it follows a simple and traditional request-response design.
+<br/><br/>
+
+#### 2.2.2.1 Read Path: Query
+
+User sends a text query to the Gateway Service, which forwards the request to the Embedding Service. 
+<br/><br/>
+
+#### 2.2.2.2 Read Path: Retrieval
+
+![FYP System Design v2 (12)](https://github.com/user-attachments/assets/1010cefa-89b7-47c3-9668-0b9ad01cc584)
+
+For each element type, Embedding Service embeds the text query using the corresponding embedding model. The text embedding is used to query in the namespace corresponding to the element type and user, fetching top-k elements most similar to the text query. The top-k elements are reranked by the element-specific rerankers, and only the top-n ranked elements are returned as response.
 
 *Note: `top_k` = `top_n` * MULTIPLIER, where MULTIPLIER is an int > 1*
+<br/><br/>
+
+#### 2.2.2.3 Read Path: Transform & Aggregate
+
+On receiving the results from the Embedding Service, the Gateway Service transforms the response and fetches corresponding asset and element meta data from the Meta Service.
+<br/><br/>
+
 <hr/>
 
 ## Setup
