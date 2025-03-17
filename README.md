@@ -16,13 +16,24 @@ This repo orchestrates the system on a single machine with containerized service
 <hr/>
 
 ## Demo
-In the following demo, the object repo consists of:
-- Random sampling of 30 videos from the [tiktok-trending-december-2020 dataset](https://www.kaggle.com/datasets/erikvdven/tiktok-trending-december-2020)
-- Random sampling of 30 PDFs from [dataset-of-pdf-files](https://www.kaggle.com/datasets/manisha717/dataset-of-pdf-files)
-- Random sampling of 60 text files from [wikipedia-small-3000-embedded](https://huggingface.co/datasets/not-lain/wikipedia-small-3000-embedded)
-- Random sampling of 150 images from [Flickr30k](https://www.kaggle.com/datasets/hsankesara/flickr-image-dataset)
 
-https://github.com/user-attachments/assets/fe070d59-6a9b-47b2-8d31-b95382432fb1
+### Sony WH-1000XM4 Help Guide
+Use case: Customer support<br/>
+Dataset:
+- PDFs scraped from [Sony WH-1000XM4 Help Guide](https://helpguide.sony.net/mdr/wh1000xm4/v1/en/index.html)
+- Videos from [Sony Europe Youtube Channel](https://www.youtube.com/@SonyEuro)
+
+https://github.com/user-attachments/assets/d47c62df-6495-4882-8019-eff8320f2cfd
+
+<br/>
+
+### Pinecone Python Client Codebase
+Use case: Internal technical documentation search<br/>
+Dataset:
+- [Pinecone GitHub Code Base](https://github.com/pinecone-io/pinecone-python-client)
+
+https://github.com/user-attachments/assets/d1782548-c8f8-4c92-8ab5-a7cba4692d87
+
 <hr/>
 
 ## Architecture
