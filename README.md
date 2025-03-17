@@ -38,7 +38,8 @@ https://github.com/user-attachments/assets/d1782548-c8f8-4c92-8ab5-a7cba4692d87
 
 # 2. System
 ## 2.1 System Overview
-![FYP System Design v2 (7)](https://github.com/user-attachments/assets/501e85f3-c355-4ad7-8ab5-2f6a19a3fe25)
+
+![FYP System Design v2 (14)](https://github.com/user-attachments/assets/ae77d94a-ffa7-4671-9a88-1da1154d8365)
 
 ## 2.2 Detailed Architecture
 The hybrid architecture can be divided into the write and read paths, which are event-driven and request-response based respectively.
